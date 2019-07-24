@@ -68,6 +68,7 @@
       with_dependencies: yes
     ignore_errors: true
     with_items: 
+      - docker
       - dashboard-view
       - cloudbees-folder
       - antisamy-markup-formatter
@@ -137,13 +138,13 @@
       host: 0.0.0.0
       port: 8080
       delay: 5
+  - name: install docker 
+    yum:    
+      name: docker
+      state: latest
+  - name: add jenkins user to docker wheel
+    command: sudo usermod -a -G docker jenkins
   - name: download frontend pipeline 
     get_url:
       url: https://raw.githubusercontent.com/Danielperga97/ramp_up/develop/infraestructure/front_pipeline.groovy
       dest: /var/lib/jenkins/front_pipeline.groovy
-
-    
-
-    
-
-      
