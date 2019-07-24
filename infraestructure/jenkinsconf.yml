@@ -1,0 +1,130 @@
+- name: jenkins auto configuration 
+  hosts: all
+  become: yes
+  become_user: root
+  become_method: sudo 
+  tasks:
+  - name: install java 
+    yum:    
+      name: java-1.8.0-openjdk-devel
+      state: latest
+  - name: add jenkins repo
+    yum_repository:
+      name: Jenkins-stable
+      description: Jenkins YUM repo
+      baseurl: http://pkg.jenkins.io/redhat-stable
+      file: /etc/yum.repos.d/jenkins.repo
+  - name: add jenkins key 
+    rpm_key: 
+      state: present
+      key: https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+  - name: install jenkins 
+    yum:    
+      name: jenkins
+      state: present
+  - name: start and enable Jenkins server
+    service:
+      name: jenkins
+      state: started
+      enabled: yes 
+  - name: disable jenkins initialization password screen
+    lineinfile:
+      dest: /etc/sysconfig/jenkins
+      regexp: '^(.*)JAVA_ARGS(.*)'
+      line: 'JAVA_ARGS="-Djenkins.install.runSetupWizard=false"'
+  - name: disable jenkins initialization password screen 2
+    lineinfile:
+      dest: /etc/sysconfig/jenkins
+      regexp: '^(.*)JENKINS_JAVA_OPTIONS(.*)'
+      line: 'JENKINS_JAVA_OPTIONS="-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false"'
+  - name: create groovy init.d folder
+    file:
+      path: /var/lib/jenkins/init.groovy.d
+      state: directory
+      mode: "u=rw,g=rwx,o=rwx"
+  - name: create default user 
+    copy: 
+      src: /home/daniel/Documentos/workspace_rampup/basic-security.groovy
+      dest: /var/lib/jenkins/init.groovy.d/basic-security.groovy
+  - name: restart jenkins service
+    service: 
+     name: jenkins 
+     state: restarted
+  - name: wait for jenkins to start
+    wait_for:
+      host: 0.0.0.0
+      port: 8080
+      delay: 5
+  - name: download plugin list 
+    get_url:
+      url: https://raw.githubusercontent.com/Danielperga97/workspace_rampup/master/plugins?token=AFFRSSV6QT2HYY7MPUDYQHK5ICRLE
+      dest: /home/ec2-user/plugins
+  - name: install plugins 
+    jenkins_plugin:
+      name: "{{ item }}"
+      url_username: jenkinsadmin
+      url_password: "jenkinspassword"
+      state: latest
+      with_dependencies: yes
+    ignore_errors: true
+    with_items: 
+      - dashboard-view
+      - cloudbees-folder
+      - antisamy-markup-formatter
+      - build-name-setter
+      - build-timeout
+      - config-file-provider
+      - credentials-binding
+      - embeddable-build-status
+      - rebuild
+      - ssh-agent
+      - throttle-concurrents
+      - timestamper
+      - ws-cleanup
+      - ant
+      - gradle
+      - msbuild
+      - nodejs
+      - checkstyle
+      - cobertura
+      - htmlpublisher
+      - junit
+      - warnings
+      - xunit
+      - workflow-aggregator
+      - github-organization-folder
+      - pipeline-stage-view
+      - build-pipeline-plugin
+      - conditional-buildstep
+      - jenkins-multijob-plugin
+      - parameterized-trigger
+      - copyartifact
+      - bitbucket
+      - clearcase
+      - cvs
+      - git
+      - git-parameter
+      - github
+      - gitlab-plugin
+      - p4
+      - repo
+      - subversion
+      - teamconcert
+      - tfs
+      - matrix-project
+      - ssh-slaves
+      - windows-slaves
+      - matrix-auth
+      - pam-auth
+      - ldap
+      - role-strategy
+      - active-directory
+      - email-ext
+      - emailext-template
+      - mailer
+      - publish-over-ssh
+      - ssh
+  - name: create pipeline
+    
+
+      
