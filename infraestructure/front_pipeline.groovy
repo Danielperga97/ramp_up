@@ -1,8 +1,5 @@
 pipeline {
     agent any
-    triggers {
-    when { branch 'master' }
-    }
     stages {
         stage('build') {
             steps {
