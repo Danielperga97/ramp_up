@@ -82,6 +82,7 @@ resource "aws_instance" "jenkins" {
         Name = "jenkins_dperez"
         project = "rampup_daniel"
         responsible = "dperez@psl.com.co"
+        role= "jenkins"
     }
 }
 resource "aws_eip" "nat_ip" {
@@ -112,7 +113,19 @@ resource "aws_autoscaling_group" "auto_scaling_front" {
     load_balancers = ["${aws_elb.elbfront.id}"]
   lifecycle {
     create_before_destroy = true
-  }       
+  }
+       tags = [
+    {
+      key                 = "role"
+      value               = "frontend"
+      propagate_at_launch = true
+    },
+    {
+      key                 = "responsible"
+      value               = "dperezg@psl.com.co"
+      propagate_at_launch = true
+    },
+  ]
   }
 
 resource "aws_elb" "elbfront" {
@@ -269,6 +282,18 @@ resource "aws_autoscaling_group" "auto_scaling_backt" {
   lifecycle {
     create_before_destroy = true
   }
+         tags = [
+    {
+      key                 = "role"
+      value               = "backend"
+      propagate_at_launch = true
+    },
+    {
+      key                 = "responsible"
+      value               = "dperezg@psl.com.co"
+      propagate_at_launch = true
+    },
+  ]
   }
 
 resource "aws_elb" "elbback" {

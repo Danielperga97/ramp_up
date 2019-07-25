@@ -1,5 +1,5 @@
 - name: jenkins auto configuration 
-  hosts: all
+  hosts: tag_role_jenkins
   become: yes
   become_user: root
   become_method: sudo 
@@ -55,10 +55,6 @@
       host: 0.0.0.0
       port: 8080
       delay: 5
-  - name: download plugin list 
-    get_url:
-      url: https://raw.githubusercontent.com/Danielperga97/workspace_rampup/master/plugins?token=AFFRSSV6QT2HYY7MPUDYQHK5ICRLE
-      dest: /home/ec2-user/plugins
   - name: install plugins 
     jenkins_plugin:
       name: "{{ item }}"
@@ -125,10 +121,6 @@
       - mailer
       - publish-over-ssh
       - ssh
-  - name: deploy pipeline script
-    get_url:
-      url: 
-      dest: /home/ec2-user/plugins
   - name: restart jenkins service
     service: 
      name: jenkins 
@@ -144,7 +136,3 @@
       state: latest
   - name: add jenkins user to docker wheel
     command: sudo usermod -a -G docker jenkins
-  - name: download frontend pipeline 
-    get_url:
-      url: https://raw.githubusercontent.com/Danielperga97/ramp_up/develop/infraestructure/front_pipeline.groovy
-      dest: /var/lib/jenkins/front_pipeline.groovy
