@@ -3,11 +3,8 @@ RUN apk add git
 ENV POSTGRES_USER=postgres
 ENV POSTGRES_PASSWORD=2045835202
 ENV POSTGRES_DB=movie_db
+EXPOSE 5432
 WORKDIR /
 RUN git clone https://github.com/Danielperga97/ramp_up.git
 RUN mv /ramp_up/containers/database/CreateDB.sql /docker-entrypoint-initdb.d/
 WORKDIR /docker-entrypoint-initdb.d/
-
- 
-
-
