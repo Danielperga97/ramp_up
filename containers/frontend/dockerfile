@@ -1,9 +1,9 @@
 FROM node:current-alpine
 WORKDIR /
 RUN apk add git
-RUN git clone https://github.com/Danielperga97/movie-analyst-ui.git /movie-analist-ui
-WORKDIR /movie-analist-ui
-ENV BACK_HOST=movie-analist-api
+RUN git clone https://github.com/Danielperga97/movie-analyst-ui.git /movie-analyst-ui
+WORKDIR /movie-analyst-ui
+ENV BACK_HOST=movie-analyst-api
 RUN npm install 
-EXPOSE 3000
+EXPOSE 3030
 ENTRYPOINT npm start

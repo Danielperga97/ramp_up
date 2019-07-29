@@ -1,9 +1,9 @@
 FROM node:current-alpine
 WORKDIR /
 RUN apk add git
-RUN git clone https://github.com/Danielperga97/movie-analyst-api.git /movie-analist-api
-WORKDIR /movie-analist-api
-ENV BACK_HOST=movie-analist-api
+RUN git clone https://github.com/Danielperga97/movie-analyst-api.git /movie-analyst-api
+WORKDIR /movie-analyst-api
+ENV BACK_HOST=movie-analyst-api
 ENV DB_USER=postgres
 ENV DB_HOST=database
 ENV DB_NAME=movie_db
