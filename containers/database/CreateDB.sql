@@ -1,7 +1,7 @@
 CREATE TABLE movies (
     title character varying(255) NOT NULL,
     release character varying (24) NOT NULL,
-    score integer varying(3),
+    score integer,
     reviewer character varying(70) NOT NULL,
     publication character varying(70) NOT NULL
 );
