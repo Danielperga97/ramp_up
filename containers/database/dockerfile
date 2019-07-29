@@ -1,0 +1,6 @@
+FROM postgres:alpine
+ENV POSTGRES_USER=postgres
+ENV POSTGRES_PASSWORD=2045835202
+ENV POSTGRES_DB=movie_db
+WORKDIR /docker-entrypoint-initdb.d/
+RUN git clone 

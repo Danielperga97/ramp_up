@@ -1,5 +1,5 @@
 - name: jenkins auto configuration 
-  hosts: all
+  hosts: tag_role_jenkins
   become: yes
   become_user: root
   become_method: sudo 
@@ -55,10 +55,6 @@
       host: 0.0.0.0
       port: 8080
       delay: 5
-  - name: download plugin list 
-    get_url:
-      url: https://raw.githubusercontent.com/Danielperga97/workspace_rampup/master/plugins?token=AFFRSSV6QT2HYY7MPUDYQHK5ICRLE
-      dest: /home/ec2-user/plugins
   - name: install plugins 
     jenkins_plugin:
       name: "{{ item }}"
@@ -68,6 +64,7 @@
       with_dependencies: yes
     ignore_errors: true
     with_items: 
+      - docker
       - dashboard-view
       - cloudbees-folder
       - antisamy-markup-formatter
@@ -124,7 +121,18 @@
       - mailer
       - publish-over-ssh
       - ssh
-  - name: create pipeline
-    
-
-      
+  - name: restart jenkins service
+    service: 
+     name: jenkins 
+     state: restarted
+  - name: wait for jenkins to start
+    wait_for:
+      host: 0.0.0.0
+      port: 8080
+      delay: 5
+  - name: install docker 
+    yum:    
+      name: docker
+      state: latest
+  - name: add jenkins user to docker wheel
+    command: sudo usermod -a -G docker jenkins

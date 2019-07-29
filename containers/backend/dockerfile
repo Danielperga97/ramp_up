@@ -1,0 +1,14 @@
+FROM node:current-alpine
+WORKDIR /
+RUN apk add git
+RUN git clone https://github.com/Danielperga97/movie-analyst-api.git /movie-analist-api
+WORKDIR /movie-analist-api
+ENV BACK_HOST=movie-analist-api
+ENV DB_USER=postgres
+ENV DB_HOST=movie-analyst-api
+ENV DB_NAME=movie_db
+ENV DB_PASS=2045835202
+RUN npm install 
+RUN npm install pg
+EXPOSE 3000
+ENTRYPOINT npm start
